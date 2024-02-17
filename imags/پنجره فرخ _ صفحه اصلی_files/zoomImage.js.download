@@ -1,0 +1,208 @@
+/**
+ HOW IT WORKS :
+ ** first you need a tag with class 'wb-image-zoom' ,
+ ** tag with '.wb-image-zoom' must has an attribute 'wb-data-zoom="url-> large image"'
+ ** tag with '.wb-image-zoom' must has next sibling that has one these classes {"wb-zoom-lens","wb-zoom-overlay","wb-zoom-inner"}
+ **/
+/**
+ ADD THE STYLE ,FOR EACH CLASS YOU H'VD CHOSE  :
+ *
+ .wb-zoom-overlay{
+                 display:inline-block;
+                 visibility: hidden;
+                 position: absolute;
+                 width: 60%;
+                 height: 60%;
+                 left: 481px;
+                 top: 80px;
+                 padding: 25px;
+                 border: 1px solid gray;
+                 background-color: white;
+                 background-repeat:no-repeat;
+                 opacity: 1;
+                 text-align: center;
+                 z-index: 10;
+                 border-radius: 10px;
+             }
+ .wb-zoom-lens{
+                 float: left;
+                 border: 1px solid #EEEEEE;
+                 width: 200px;
+                 height: 200px;
+                 background-repeat: no-repeat;
+                 background-color: #ffffff;
+                 position: absolute;
+                 border-radius: 104px;
+                 display: none;
+             }
+ .wb-zoom-inner{
+                 z-index: 10;
+                 overflow: hidden;
+                 margin-left: 1px;
+                 margin-top: 1px;
+                 float: left;
+                 cursor: crosshair;
+                 background-repeat: no-repeat;
+                 background-color: #ffffff;
+                 position: absolute;
+                 top: 0px;
+                 left: 0px;
+                 display: none;
+             }
+ **/
+/**
+ SIMPLE{
+                <img class="width100 wb-image-zoom" src="{{asset($gallery->thumbnail)}}" wb-data-zoom="{{ $gallery->image }}" alt="{{$product->name}}">
+        OR=>    <div class="wb-zoom-inner"></div>
+        OR=>    <div class="wb-zoom-lens"></div>
+        OR=>    <div class="wb-zoom-overlay"></div>
+        }
+ **/
+
+/*
+variables
+*   path => the collection of elements there are under pointer
+*   images => the collection of elements whit class 'wb-image-zoom'
+*   zoomElement => element for Each images
+*   largeImage => url of image that must be in background
+*   zoomContainer => the element that contains the magnified image
+*   posX=> mouse position - offsetX
+*   posY=> mouse position - offsetY
+*/
+
+document.addEventListener("DOMContentLoaded", ()=> {
+    let posX = 0, posY = 0;
+    document.body.addEventListener('mousemove', (event) => {
+        let path = document.elementsFromPoint(event.clientX, event.clientY);
+        let onContainer = false;
+        for (let i = 0; i < path.length; i++) {
+            let zoomElement =path[i] ;
+            // document.defaultView.getComputedStyle(path[i]).getPropertyValue('z-index');
+            if (zoomElement.classList.contains('wb-image-zoom')) {
+                callZoomIn(zoomElement, event);
+                onContainer = true;
+            }
+        }
+
+        if (!onContainer) {
+            let images = document.querySelectorAll(".wb-image-zoom");
+            images.forEach((el) => {
+                callZoomOut(el);
+            });
+        }
+    });
+
+    function callZoomIn(zoomElement, event) {
+        let largeImage = zoomElement.getAttribute('wb-data-zoom');
+        let zoomContainer = zoomElement.nextElementSibling;
+        //lens
+        if (zoomContainer && zoomContainer.classList.contains('wb-zoom-lens')) {
+            lensZoomIn(largeImage ,zoomContainer, zoomElement, event);
+        //overlay
+        }else if(zoomContainer && zoomContainer.classList.contains('wb-zoom-overlay')){
+            overlayZoomIn(largeImage, zoomContainer, zoomElement, event);
+        //inner
+        }else if(zoomContainer && zoomContainer.classList.contains('wb-zoom-inner')){
+            innerZoomIn(largeImage, zoomContainer, zoomElement, event);
+        }
+    }
+
+    function callZoomOut(zoomElement) {
+        let zoomContainer = zoomElement.nextElementSibling;
+        if (zoomContainer && zoomContainer.classList.contains('wb-zoom-lens')) {
+            ZoomOut(zoomContainer);
+        }else if(zoomContainer && zoomContainer.classList.contains('wb-zoom-overlay')){
+            ZoomOut(zoomContainer);
+        }else if(zoomContainer && zoomContainer.classList.contains('wb-zoom-inner')){
+
+        }
+    }
+
+    function ZoomOut(zoomContainer) {
+        zoomContainer.style.display = "none";
+        zoomContainer.style.visibility = "hidden";
+    }
+
+    function overlayZoomIn(largeImage, zoomContainer, zoomElement, event) {
+        //A box opens next to the image that contains the magnified image
+        showZoomContainer(zoomContainer, largeImage);
+        setPosition(event, zoomElement);
+        zoomContainer.style.backgroundPosition = (-posX * 2 + 110) + "px " + (-posY * 2 + 140) + "px";
+    }
+
+    function lensZoomIn(largeImage, zoomContainer, zoomElement, event) {
+        //A box is placed on the mouse pointer that contains a magnified image
+        showZoomContainer(zoomContainer, largeImage);
+        setPosition(event, zoomElement);
+        zoomContainer.style.backgroundPosition = (-posX * 2 + 80) + "px " + (-posY * 2 + 80) + "px";
+        zoomContainer.style.left = (posX-100) + "px";
+        zoomContainer.style.top = (posY-100) + "px";
+    }
+
+    function innerZoomIn(largeImage, zoomContainer, zoomElement, event) {
+        //The enlarged image is displayed inside the main frame
+        showZoomContainer(zoomContainer, largeImage);
+        zoomContainer.style.width = zoomElement.width + 'px';
+        zoomContainer.style.height = zoomElement.height + 'px';
+        zoomContainer.style.top = zoomElement.top + 'px';
+        zoomContainer.style.left = zoomElement.left + 'px';
+
+        zoomContainer.addEventListener('mousemove', (event) => {
+            // zoomElement.style.display = 'none';
+            setPosition(event, zoomElement);
+            zoomContainer.style.backgroundSize = (zoomContainer.clientWidth *2) + "px " + (zoomContainer.clientWidth * 2) + "px";
+            zoomContainer.style.backgroundPosition = (-posX * 2) + "px " + (-posY * 2) + "px";
+        });
+        zoomContainer.addEventListener('mouseout', () => {
+            zoomContainer.style.display = "none";
+            zoomContainer.style.visibility = "hidden";
+            zoomElement.style.display = 'block';
+        });
+    }
+
+    function showZoomContainer(zoomContainer, largeImage) {
+        zoomContainer.style.display = "inline-block";
+        zoomContainer.style.visibility = "visible";
+        zoomContainer.style.backgroundImage = "url('" + largeImage + "')";
+        return zoomContainer;
+    }
+
+    function setPosition(event, zoomElement) {
+        /*        posX = event.offsetX ? (event.offsetX) : event.pageX - zoomElement.offsetLeft;
+                  posY = event.offsetY ? (event.offsetY) : event.pageY - zoomElement.offsetTop;*/
+        let posZoomElement = zoomElement.getBoundingClientRect();
+        /*calculate the cursor's x and y coordinates, relative to the image:*/
+        posX = event.pageX - posZoomElement.left;
+        posY = event.pageY - posZoomElement.top;
+        /*consider any page scrolling:*/
+        posX = posX - window.pageXOffset;
+        posY = posY - window.pageYOffset;
+    }
+});
+
+/**CHANGE IMAGE IN GALLERY ON CLICK**/
+$(".wb-change-image").click(function() {
+    let src = this.getAttribute("src");
+    let dataZoom = this.getAttribute("wb-data-zoom");
+    $(".wb-main-image").attr("src", src);
+    $(".wb-main-image").attr("wb-data-zoom", dataZoom);
+    manage();
+});
+
+function manage(){
+    $('.wb-change-image').parent().map((index, el) => {
+        let classList = el.getAttribute("class");
+        if (classList.indexOf("active") >= 0){
+            classList = classList.replace("active",'');
+            el.setAttribute("class", classList);
+        }else{
+            let src = $(".wb-main-image").attr("src");
+            let img = el.children;
+            let srcThumb = img[0].getAttribute("src");
+            if (srcThumb === src){
+                classList = classList+"active";
+                el.setAttribute("class", classList);
+            }
+        }
+    });
+}

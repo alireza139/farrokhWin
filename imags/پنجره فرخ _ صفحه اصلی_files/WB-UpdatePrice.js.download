@@ -1,0 +1,33 @@
+$( document ).ready(function() {
+    $(".wb-change-price").click(function(){
+        let price = $(this).attr('wb-price-variation');
+        let old_price = $(this).attr('wb-old-price-variation');
+        let stock = $(this).attr('wb-stock-variation');
+        if(stock!=null){
+            $(".wb-stock").text(stock);
+        }
+        if(price){
+            $(".wb-price").text( addCommas(price)  );
+        }
+        if(old_price) {
+            $(".wb-old-price").text(addCommas(old_price));
+        }
+        $('.wb-change-price').map((index, el) => {
+            let classes = el.getAttribute('class').replace('active','');
+            el.setAttribute('class',classes)
+        });
+        $(this).addClass( "active" )
+    });
+    function addCommas(nStr)
+    {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{3})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+});

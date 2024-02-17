@@ -1,0 +1,64 @@
+document.addEventListener("DOMContentLoaded", function() {
+    let shareButton=document.querySelectorAll(".wb-share-button");
+
+    let buildHref="";// the href that will share the page
+    let app=""; //what app is must be used.
+    let description=""; // title or description will send in massage whit url
+    let pageURL=""; // the current page url we wanna to send in massage whit url
+
+    shareButton.forEach((el)=>{
+        getInfo(el);
+        switch(app) {
+            case 'telegram':
+                telegram(el);
+                break;
+            case 'whatsapp':
+                whatsapp(el);
+                break;
+            case 'copy':
+                el.addEventListener("click",()=>{
+                    let tooltip=document.querySelector(".wb-tooltip");
+                    copyToClipboard(tooltip);
+                });
+                break;
+            default:
+            // code block
+        }
+
+    });
+
+    function getInfo(button) {
+        app = button.getAttribute("wb-app");
+        description = button.getAttribute("wb-desc");
+    }
+
+    //copy current url
+    function copyUrl() {
+        let inputC = document.body.appendChild(document.createElement("input"));
+        inputC.value = window.location.href;
+        let url=inputC.value;
+        inputC.parentNode.removeChild(inputC);
+        return  url;
+    }
+
+    function telegram(el) {
+        buildHref='https://t.me/share/url?url='+ copyUrl() +'&text='+encodeURI(description);
+        el.setAttribute("href",buildHref);
+    }
+
+    function whatsapp(el) {
+        buildHref="https://wa.me?text="+ copyUrl();
+        el.setAttribute("data-action",'share/whatsapp/share');
+        el.setAttribute("href",buildHref);
+    }
+
+    function copyToClipboard(tooltip) {
+        let inputc = document.body.appendChild(document.createElement("input"));
+        inputc.value = window.location.href;
+        inputc.select();
+        document.execCommand('copy');
+        inputc.parentNode.removeChild(inputc);
+        buildHref="#";
+    }
+});
+

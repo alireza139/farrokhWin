@@ -1,0 +1,53 @@
+document.addEventListener("DOMContentLoaded", function () {
+
+    if (typeof noUiSlider === 'object') {
+        let wbPriceSlider = document.getElementById('wb-price-slider');
+
+
+        let wbFilterPrice = document.getElementById('filterPrice');
+
+
+        let name = wbFilterPrice.getAttribute('name');
+        let url = new URL(window.location);
+        let param = url.searchParams.get(name);
+        let start_min = 0, start_max = 100000000;
+        if(param) {
+            param = param.substring(1, param.length);
+            param = param.substring(0, param.length - 1);
+            start_min = param.split(',')[0];
+            start_max = param.split(',')[1];
+        }
+        if (wbPriceSlider) {
+            const min = 0, max = 100000000;
+            noUiSlider.create(wbPriceSlider, {
+                start: [start_min, start_max],
+                connect: true,
+                step: 100000,
+                margin: 500000,
+                range: {min, max},
+                tooltips: false,
+                format: {
+                    // 'to' the formatted value. Receives a number.
+                    to: function (value) {
+                        return new Intl.NumberFormat().format(value) + 'تومان';
+                    },
+                    // 'from' the formatted value.
+                    // Receives a string, should return a number.
+                    from: function (value) {
+                        return Number(value.replace('تومان', ''));
+                    }
+                }
+            });
+
+            // Update Price Range
+            wbPriceSlider.noUiSlider.on('update', function (values, handle, Numbervalues) {
+                $('#wb-filter-price-range').text(values[0] + ' - ' + values[1]);
+                if (Numbervalues[0] !== min || Numbervalues[1] !== max) {
+                    wbFilterPrice.value = '<' + Math.round(Numbervalues[0]) + ',' + Math.round(Numbervalues[1]) + '>';
+                } else {
+                    wbFilterPrice.value = '';
+                }
+            });
+        }
+    }
+});

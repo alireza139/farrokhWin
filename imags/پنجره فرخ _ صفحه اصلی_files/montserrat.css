@@ -1,0 +1,36 @@
+@font-face {
+    font-family: "montserrat";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/montserrat/montserrat-regular.ttf');
+}
+@font-face {
+    font-family: "montserrat-medium";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/montserrat/montserrat-medium.ttf');
+}
+@font-face {
+    font-family: "montserrat-light";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/montserrat/montserrat-light.ttf');
+}
+@font-face {
+    font-family: "montserrat-extralight";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/montserrat/montserrat-extralight.ttf');
+}
+@font-face {
+    font-family: "montserrat-bold";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/montserrat/montserrat-bold.ttf');
+}
+@font-face {
+    font-family: "montserrat-semibold";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/montserrat/montserrat-semibold.ttf');
+}
+@font-face {
+    font-family: "montserrat-extrabold";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/montserrat/montserrat-extrabold.ttf');
+}
+@font-face {
+    font-family: "montserrat-thin";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/montserrat/montserrat-thin.ttf');
+}
+@font-face {
+    font-family: "montserrat-black";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/montserrat/montserrat-black.ttf');
+}

@@ -1,0 +1,26 @@
+@font-face {
+    font-family: "morabba";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/morabba/Morabba-Regular.ttf');
+}
+@font-face {
+    font-family: "morabba-black";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/morabba/Morabba-Black.ttf');
+}
+@font-face {
+    font-family: "morabba-bold";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/morabba/Morabba-Bold.ttf');
+}
+@font-face {
+    font-family: "morabba-light";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/morabba/Morabba-Light.ttf');
+}
+@font-face {
+    font-family: "morabba-medium";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/morabba/Morabba-Medium.ttf');
+}
+@font-face {
+    font-family: "morabba-semibold";
+    src: url('https://cdn.willaspace.com/web-builder/fonts/morabba/Morabba-SemiBold.ttf');
+}
+
+
